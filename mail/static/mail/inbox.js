@@ -38,11 +38,16 @@ function load_mailbox(mailbox) {
 
     // Print emails
     console.log(emails);
-
+    const listgroup = document.createElement('div');
+    listgroup.classList.add('list-group');
+    document.querySelector('#emails-view').append(listgroup);
 
     emails.forEach(email => {
       const item = document.createElement('a');
       item.classList.add('list-group-item', 'flex-column', 'align-items-start');
+      if (email['read'] == true) {
+        item.classList.add('read-email')
+      }
       // item.setAttribute('href',`${email['id']}`);
 
       const top = document.createElement('div');
@@ -69,7 +74,7 @@ function load_mailbox(mailbox) {
       item.addEventListener('click', function() {
           console.log('This element has been clicked!')
       });
-      document.querySelector('#emails-view').append(item);
+      listgroup.append(item);
     });
   });
 }
