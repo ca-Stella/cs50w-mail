@@ -35,10 +35,18 @@ function load_mailbox(mailbox) {
   fetch(`/emails/${mailbox}`)
   .then(response => response.json())
   .then(emails => {
+
       // Print emails
       console.log(emails);
 
-      // ... do something else with emails ...
+      emails.forEach(email => {
+        const item = document.createElement('div');
+        item.innerHTML = email['subject'];
+        item.addEventListener('click', function() {
+          console.log('This element has been clicked!')
+      });
+        document.querySelector('#emails-view').append(item);
+      });
   });
 }
 
