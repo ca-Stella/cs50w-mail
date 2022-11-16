@@ -36,17 +36,41 @@ function load_mailbox(mailbox) {
   .then(response => response.json())
   .then(emails => {
 
-      // Print emails
-      console.log(emails);
+    // Print emails
+    console.log(emails);
 
-      emails.forEach(email => {
-        const item = document.createElement('div');
-        item.innerHTML = email['subject'];
-        item.addEventListener('click', function() {
+
+    emails.forEach(email => {
+      const item = document.createElement('a');
+      item.classList.add('list-group-item', 'flex-column', 'align-items-start');
+      // item.setAttribute('href',`${email['id']}`);
+
+      const top = document.createElement('div');
+      top.classList.add('d-flex','w-100','justify-content-between');
+      item.append(top);
+
+      const title = document.createElement('h3');
+      title.innerHTML = email['subject'];
+      top.append(title);
+
+      const timestamp = document.createElement('small');
+      timestamp.innerHTML = email['timestamp'];
+      top.append(timestamp);
+
+      const person = document.createElement('p');
+      if (mailbox == 'sent') {
+        person.innerHTML = `To: ${email['recipients']}`;
+      }
+      else {
+        person.innerHTML = `To: ${email['sender']}`
+      }
+      item.append(person);
+
+      item.addEventListener('click', function() {
           console.log('This element has been clicked!')
       });
-        document.querySelector('#emails-view').append(item);
-      });
+      document.querySelector('#emails-view').append(item);
+    });
   });
 }
 
