@@ -48,7 +48,11 @@ function load_mailbox(mailbox) {
       const item = document.createElement('a');
       item.classList.add('list-group-item', 'flex-column', 'align-items-start');
       if (email['read'] == true) {
+        item.classList.remove('unread-email')
         item.classList.add('read-email')
+      } else {
+        item.classList.remove('read-email')
+        item.classList.add('unread-email')
       }
       listgroup.append(item);
       // item.setAttribute('href',`${email['id']}`);
@@ -112,6 +116,7 @@ function load_email(email) {
   document.querySelector('#email-view').style.display = 'block';
   document.querySelector('#emails-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'none';
+  document.querySelector('#email-view').innerHTML = '';
 
   const subject = document.createElement('h3');
   subject.innerHTML = email['subject']
@@ -134,4 +139,10 @@ function load_email(email) {
   body.innerHTML = `${email['body']}`;
   document.querySelector('#email-view').append(body);
 
+  fetch(`/emails/${email['id']}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+        read: true
+    })
+  })
 }
