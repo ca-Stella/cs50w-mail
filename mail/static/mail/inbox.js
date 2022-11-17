@@ -15,6 +15,7 @@ function compose_email() {
 
   // Show compose view and hide other views
   document.querySelector('#emails-view').style.display = 'none';
+  document.querySelector('#email-view').style.display = 'none';
   document.querySelector('#compose-view').style.display = 'block';
 
   // Clear out composition fields
@@ -28,6 +29,7 @@ function load_mailbox(mailbox) {
   // Show the mailbox and hide other views
   document.querySelector('#emails-view').style.display = 'block';
   document.querySelector('#compose-view').style.display = 'none';
+  document.querySelector('#email-view').style.display = 'none';
 
   // Show the mailbox name
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
@@ -48,6 +50,7 @@ function load_mailbox(mailbox) {
       if (email['read'] == true) {
         item.classList.add('read-email')
       }
+      listgroup.append(item);
       // item.setAttribute('href',`${email['id']}`);
 
       const top = document.createElement('div');
@@ -67,14 +70,17 @@ function load_mailbox(mailbox) {
         person.innerHTML = `To: ${email['recipients']}`;
       }
       else {
-        person.innerHTML = `To: ${email['sender']}`
+        person.innerHTML = `From: ${email['sender']}`
       }
       item.append(person);
 
       item.addEventListener('click', function() {
-          console.log('This element has been clicked!')
+          fetch(`/emails/${email['id']}`)
+          .then(response => response.json())
+          .then(email => {
+              load_email(email);
+          });
       });
-      listgroup.append(item);
     });
   });
 }
@@ -99,4 +105,33 @@ function send_email() {
   });
   
   return false;
+}
+
+function load_email(email) {
+  // Show the email and hide other views
+  document.querySelector('#email-view').style.display = 'block';
+  document.querySelector('#emails-view').style.display = 'none';
+  document.querySelector('#compose-view').style.display = 'none';
+
+  const subject = document.createElement('h3');
+  subject.innerHTML = email['subject']
+  subject.classList.add('email-subject');
+  document.querySelector('#email-view').append(subject);
+
+  const timestamp = document.createElement('p');
+  timestamp.innerHTML = email['timestamp'];
+  document.querySelector('#email-view').append(timestamp);
+
+  const sender = document.createElement('p');
+  sender.innerHTML = `From: ${email['sender']}`
+  document.querySelector('#email-view').append(sender);
+
+  const recipient = document.createElement('p');
+  recipient.innerHTML = `To: ${email['recipients']}`;
+  document.querySelector('#email-view').append(recipient);
+
+  const body = document.createElement('p');
+  body.innerHTML = `${email['body']}`;
+  document.querySelector('#email-view').append(body);
+
 }
