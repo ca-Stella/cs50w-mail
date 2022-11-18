@@ -174,10 +174,20 @@ function load_email(email, mailbox) {
   reply.innerHTML = 'Reply';
   document.querySelector('#email-view').append(reply)
   reply.addEventListener('click', function() {
-    reply_email(email)
+    reply_email(email);
   });
 }
 
 function reply_email(email) {
+  // Show compose view and hide other views
+  document.querySelector('#emails-view').style.display = 'none';
+  document.querySelector('#email-view').style.display = 'none';
+  document.querySelector('#compose-view').style.display = 'block';
 
+  // Fill out composition fields
+  document.querySelector('#compose-recipients').value = `${email['sender']}`;
+  document.querySelector('#compose-body').value = `On ${email['timestamp']} ${email['sender']} wrote: 
+      ${email['body']}`;
+
+  document.querySelector('#compose-subject').value = `Re: ${email['subject']}`;
 }
