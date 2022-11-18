@@ -169,4 +169,15 @@ function load_email(email, mailbox) {
       load_mailbox('inbox');
     });
   });
+
+  const reply = document.createElement('button');
+  reply.innerHTML = 'Reply';
+  document.querySelector('#email-view').append(reply)
+  reply.addEventListener('click', function() {
+    reply_email(email)
+  });
+}
+
+function reply_email(email) {
+
 }
