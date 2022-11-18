@@ -148,15 +148,15 @@ function load_email(email, mailbox) {
 
   const archive = document.createElement('button');
   if (mailbox == 'archive') {
+    archive.setAttribute('id','un-archive-action');
     archive.innerHTML = 'un-archive';
-    document.querySelector('#email-view').append(archive);
   } else if (mailbox == 'inbox') {
-    const unarchive = document.createElement('button');
+    archive.setAttribute('id','archive-action');
     archive.innerHTML = 'archive';
-    document.querySelector('#email-view').append(archive);
   } else {
     archive.style.display = 'none';
   }
+  document.querySelector('#email-view').append(archive);
 
   archive.addEventListener('click', function() {
     fetch(`/emails/${email['id']}`, {

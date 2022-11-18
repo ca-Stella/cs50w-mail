@@ -2,10 +2,22 @@ textarea {
     min-height: 400px;
 }
 
-.read-email {
+.unread-email {
     background-color: rgb(210, 210, 210);
+}
+
+.read-email {
+    background-color: rgb(255, 255, 255);
 }
 
 .list-group {
     border-radius: 5rem;
+}
+
+#un-archive-action {
+    background-color: rgb(184, 226, 184);
+}
+
+#archive-action {
+    background-color:  rgb(210, 210, 210);
 }
