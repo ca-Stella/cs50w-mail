@@ -82,7 +82,7 @@ function load_mailbox(mailbox) {
           fetch(`/emails/${email['id']}`)
           .then(response => response.json())
           .then(email => {
-              load_email(email);
+              load_email(email, mailbox);
           });
       });
     });
@@ -111,7 +111,7 @@ function send_email() {
   return false;
 }
 
-function load_email(email) {
+function load_email(email, mailbox) {
   // Show the email and hide other views
   document.querySelector('#email-view').style.display = 'block';
   document.querySelector('#emails-view').style.display = 'none';
@@ -145,4 +145,28 @@ function load_email(email) {
         read: true
     })
   })
+
+  const archive = document.createElement('button');
+  if (mailbox == 'archive') {
+    archive.innerHTML = 'un-archive';
+    document.querySelector('#email-view').append(archive);
+  } else if (mailbox == 'inbox') {
+    const unarchive = document.createElement('button');
+    archive.innerHTML = 'archive';
+    document.querySelector('#email-view').append(archive);
+  } else {
+    archive.style.display = 'none';
+  }
+
+  archive.addEventListener('click', function() {
+    fetch(`/emails/${email['id']}`, {
+      method: 'PUT',
+      body: JSON.stringify({
+          archived: mailbox == 'archive' ? false : true
+      })
+    })
+    .then(result => {
+      load_mailbox('inbox');
+    });
+  });
 }
