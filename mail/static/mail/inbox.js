@@ -34,16 +34,18 @@ function load_mailbox(mailbox) {
   // Show the mailbox name
   document.querySelector('#emails-view').innerHTML = `<h3>${mailbox.charAt(0).toUpperCase() + mailbox.slice(1)}</h3>`;
 
+  // Fetch all the emails in the mailbox
   fetch(`/emails/${mailbox}`)
   .then(response => response.json())
   .then(emails => {
 
-    // Print emails
-    console.log(emails);
+    // make an emails-view list-group
+    // console.log(emails);
     const listgroup = document.createElement('div');
     listgroup.classList.add('list-group');
     document.querySelector('#emails-view').append(listgroup);
 
+    // For each email, show information
     emails.forEach(email => {
       const item = document.createElement('a');
       item.classList.add('list-group-item', 'flex-column', 'align-items-start');
@@ -55,8 +57,8 @@ function load_mailbox(mailbox) {
         item.classList.add('unread-email')
       }
       listgroup.append(item);
-      // item.setAttribute('href',`${email['id']}`);
 
+      // Create top area with title and timestamp
       const top = document.createElement('div');
       top.classList.add('d-flex','w-100','justify-content-between');
       item.append(top);
@@ -69,6 +71,7 @@ function load_mailbox(mailbox) {
       timestamp.innerHTML = email['timestamp'];
       top.append(timestamp);
 
+      // Show the sender/receiver of the email received/sent
       const person = document.createElement('p');
       if (mailbox == 'sent') {
         person.innerHTML = `To: ${email['recipients']}`;
@@ -94,6 +97,7 @@ function send_email() {
   const subject = document.querySelector('#compose-subject').value;
   const body = document.querySelector('#compose-body').value;
 
+  // Send email with POST and load sent mailbox
   fetch('/emails', {
     method: 'POST',
     body: JSON.stringify({
@@ -118,27 +122,33 @@ function load_email(email, mailbox) {
   document.querySelector('#compose-view').style.display = 'none';
   document.querySelector('#email-view').innerHTML = '';
 
+  // Create the subject heading
   const subject = document.createElement('h3');
   subject.innerHTML = email['subject']
   subject.classList.add('email-subject');
   document.querySelector('#email-view').append(subject);
 
+  // Show timestamp
   const timestamp = document.createElement('p');
   timestamp.innerHTML = email['timestamp'];
   document.querySelector('#email-view').append(timestamp);
 
+  // Show sender
   const sender = document.createElement('p');
   sender.innerHTML = `From: ${email['sender']}`
   document.querySelector('#email-view').append(sender);
 
+  // Show recipient
   const recipient = document.createElement('p');
   recipient.innerHTML = `To: ${email['recipients']}`;
   document.querySelector('#email-view').append(recipient);
 
+  // Show the body of the email
   const body = document.createElement('p');
   body.innerHTML = `${email['body']}`;
   document.querySelector('#email-view').append(body);
 
+  // Change read status of email
   fetch(`/emails/${email['id']}`, {
     method: 'PUT',
     body: JSON.stringify({
@@ -146,6 +156,7 @@ function load_email(email, mailbox) {
     })
   })
 
+  // Add archive/un-archive button
   const archive = document.createElement('button');
   if (mailbox == 'archive') {
     archive.setAttribute('id','un-archive-action');
@@ -158,6 +169,7 @@ function load_email(email, mailbox) {
   }
   document.querySelector('#email-view').append(archive);
 
+  // Change archive status based on button press
   archive.addEventListener('click', function() {
     fetch(`/emails/${email['id']}`, {
       method: 'PUT',
@@ -170,6 +182,7 @@ function load_email(email, mailbox) {
     });
   });
 
+  // Create reply button that calls reply_email when pressed
   const reply = document.createElement('button');
   reply.innerHTML = 'Reply';
   document.querySelector('#email-view').append(reply)
@@ -187,7 +200,12 @@ function reply_email(email) {
   // Fill out composition fields
   document.querySelector('#compose-recipients').value = `${email['sender']}`;
   document.querySelector('#compose-body').value = `On ${email['timestamp']} ${email['sender']} wrote: 
-      ${email['body']}`;
+        ${email['body']}`;
 
-  document.querySelector('#compose-subject').value = `Re: ${email['subject']}`;
+  // Make the subject of the email without repetitions of Re:'s
+  let main_subject = email['subject'];
+  if (email['subject'].includes('Re: ')) {
+    main_subject = email['subject'].slice(email['subject'].lastIndexOf('Re: ')+4);
+  } 
+  document.querySelector('#compose-subject').value = `Re: ${main_subject}`;
 }
