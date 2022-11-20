@@ -21,3 +21,15 @@ textarea {
 #archive-action {
     background-color:  rgb(210, 210, 210);
 }
+
+.email-button-group {
+    display: flex;
+    gap: 20px;
+}
+
+.email-button-group > button {
+    border-radius: 5rem;
+    width: 10rem;
+    height: 2rem;
+    border: 1px solid black;
+}

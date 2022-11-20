@@ -156,6 +156,18 @@ function load_email(email, mailbox) {
     })
   })
 
+  const arch_reply = document.createElement('div');
+  arch_reply.classList.add('email-button-group');
+  document.querySelector('#email-view').append(arch_reply);
+
+  // Create reply button that calls reply_email when pressed
+  const reply = document.createElement('button');
+  reply.innerHTML = 'Reply';
+  arch_reply.append(reply);
+  reply.addEventListener('click', function() {
+    reply_email(email);
+  });
+
   // Add archive/un-archive button
   const archive = document.createElement('button');
   if (mailbox == 'archive') {
@@ -167,7 +179,7 @@ function load_email(email, mailbox) {
   } else {
     archive.style.display = 'none';
   }
-  document.querySelector('#email-view').append(archive);
+  arch_reply.append(archive);
 
   // Change archive status based on button press
   archive.addEventListener('click', function() {
@@ -180,14 +192,6 @@ function load_email(email, mailbox) {
     .then(result => {
       load_mailbox('inbox');
     });
-  });
-
-  // Create reply button that calls reply_email when pressed
-  const reply = document.createElement('button');
-  reply.innerHTML = 'Reply';
-  document.querySelector('#email-view').append(reply)
-  reply.addEventListener('click', function() {
-    reply_email(email);
   });
 }
 
