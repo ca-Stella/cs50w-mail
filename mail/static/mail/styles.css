@@ -2,11 +2,11 @@ textarea {
     min-height: 400px;
 }
 
-.unread-email {
+.read-email {
     background-color: rgb(210, 210, 210);
 }
 
-.read-email {
+.unread-email {
     background-color: rgb(255, 255, 255);
 }
 
@@ -30,7 +30,6 @@ textarea {
 .email-text {
     font-weight: normal;
 }
-
 .label-text {
     font-weight: bold;
 }
