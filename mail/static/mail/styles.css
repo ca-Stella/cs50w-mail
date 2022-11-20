@@ -27,9 +27,10 @@ textarea {
     gap: 20px;
 }
 
-.email-button-group > button {
-    border-radius: 5rem;
-    width: 10rem;
-    height: 2rem;
-    border: 1px solid black;
+.email-text {
+    font-weight: normal;
+}
+
+.label-text {
+    font-weight: bold;
 }

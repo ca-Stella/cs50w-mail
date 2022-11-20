@@ -122,39 +122,29 @@ function load_email(email, mailbox) {
   document.querySelector('#compose-view').style.display = 'none';
   document.querySelector('#email-view').innerHTML = '';
 
-  // Create the subject heading
-  const subject = document.createElement('h3');
-  subject.innerHTML = email['subject']
-  subject.classList.add('email-subject');
-  document.querySelector('#email-view').append(subject);
-
-  // Show timestamp
-  const timestamp = document.createElement('p');
-  timestamp.innerHTML = email['timestamp'];
-  document.querySelector('#email-view').append(timestamp);
-
   // Show sender
   const sender = document.createElement('p');
-  sender.innerHTML = `From: ${email['sender']}`
+  sender.innerHTML = `From: <span class="email-text">${email['sender']}</span>`;
+  sender.classList.add('label-text');  
   document.querySelector('#email-view').append(sender);
 
   // Show recipient
   const recipient = document.createElement('p');
-  recipient.innerHTML = `To: ${email['recipients']}`;
+  recipient.innerHTML = `To: <span class="email-text">${email['recipients']}</span>`;
+  recipient.classList.add('label-text');  
   document.querySelector('#email-view').append(recipient);
 
-  // Show the body of the email
-  const body = document.createElement('p');
-  body.innerHTML = `${email['body']}`;
-  document.querySelector('#email-view').append(body);
+  // Show the subject 
+  const subject = document.createElement('p');
+  subject.innerHTML = `Subject: <span class="email-text">${email['subject']}</span>`;
+  subject.classList.add('label-text');
+  document.querySelector('#email-view').append(subject);
 
-  // Change read status of email
-  fetch(`/emails/${email['id']}`, {
-    method: 'PUT',
-    body: JSON.stringify({
-        read: true
-    })
-  })
+  // Show timestamp
+  const timestamp = document.createElement('p');
+  timestamp.innerHTML = `Timestamp: <span class="email-text">${email['timestamp']}</span>`;
+  timestamp.classList.add('label-text');  
+  document.querySelector('#email-view').append(timestamp);
 
   const arch_reply = document.createElement('div');
   arch_reply.classList.add('email-button-group');
@@ -163,6 +153,7 @@ function load_email(email, mailbox) {
   // Create reply button that calls reply_email when pressed
   const reply = document.createElement('button');
   reply.innerHTML = 'Reply';
+  reply.classList.add('btn','btn-outline-primary');
   arch_reply.append(reply);
   reply.addEventListener('click', function() {
     reply_email(email);
@@ -171,10 +162,10 @@ function load_email(email, mailbox) {
   // Add archive/un-archive button
   const archive = document.createElement('button');
   if (mailbox == 'archive') {
-    archive.setAttribute('id','un-archive-action');
+    archive.classList.add('btn','btn-outline-success');
     archive.innerHTML = 'un-archive';
   } else if (mailbox == 'inbox') {
-    archive.setAttribute('id','archive-action');
+    archive.classList.add('btn','btn-outline-secondary');
     archive.innerHTML = 'archive';
   } else {
     archive.style.display = 'none';
@@ -193,6 +184,24 @@ function load_email(email, mailbox) {
       load_mailbox('inbox');
     });
   });
+
+  // Add horizontal line
+  const line = document.createElement('hr');
+  document.querySelector('#email-view').append(line);
+
+  // Show the body of the email
+  const body = document.createElement('p');
+  body.innerText = `${email['body']}`;
+  document.querySelector('#email-view').append(body);
+
+  // Change read status of email
+  fetch(`/emails/${email['id']}`, {
+    method: 'PUT',
+    body: JSON.stringify({
+        read: true
+    })
+  })
+
 }
 
 function reply_email(email) {
@@ -203,8 +212,13 @@ function reply_email(email) {
 
   // Fill out composition fields
   document.querySelector('#compose-recipients').value = `${email['sender']}`;
-  document.querySelector('#compose-body').value = `On ${email['timestamp']} ${email['sender']} wrote: 
-        ${email['body']}`;
+  document.querySelector('#compose-body').value = `
+  
+    On ${email['timestamp']} ${email['sender']} wrote: 
+        ${email['body']}
+  
+  
+        `;
 
   // Make the subject of the email without repetitions of Re:'s
   let main_subject = email['subject'];
