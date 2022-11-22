@@ -2,6 +2,8 @@
 
 This is an email webpage created as part of The CS50's Web Programming with Python and JavaScript course.  
 
+[📹 Youtube demo](https://youtu.be/NSbFTwrcEBM)
+
 ## Outcomes
 - Design a front-end for an email client that makes API calls to send and receive emails using JavaScript
 - Learned more about how to design single page applications
